@@ -20,7 +20,6 @@ export class AdvancedsearchComponent implements OnInit {
     this.route.navigate(['/search'], {queryParams: this.querylook});
   }
   removeurl(modifier){
-    console.log('print')
     this.querylook['query']=this.querylook['query'].replace('+' + decodeURIComponent(modifier),'')
 
     this.route.navigate(['/search'], {queryParams: this.querylook});
