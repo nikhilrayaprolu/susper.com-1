@@ -12,16 +12,9 @@ import {Observable} from 'rxjs';
 export class AdvancedsearchComponent implements OnInit {
   querylook = {};
   navigation$: Observable<any>;
-  selectedelements:Array<any>=[]
-  changeurl(modifier,element) {
+  changeurl(modifier) {
 
     this.querylook['query'] = this.querylook['query'] + '+' + decodeURIComponent(modifier);
-    this.selectedelements.push(element)
-    this.route.navigate(['/search'], {queryParams: this.querylook});
-  }
-  removeurl(modifier){
-    console.log('print')
-    this.querylook['query']=this.querylook['query'].replace('+' + decodeURIComponent(modifier),'')
 
     this.route.navigate(['/search'], {queryParams: this.querylook});
   }
