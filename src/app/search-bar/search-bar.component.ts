@@ -7,7 +7,7 @@ import { Store } from '@ngrx/store';
 import * as fromRoot from '../reducers';
 import { Observable } from 'rxjs';
 import * as query from '../actions/query';
-
+import * as queryactions from '../actions/query';
 @Component({
   selector: 'app-search-bar',
   templateUrl: './search-bar.component.html',
@@ -17,6 +17,7 @@ export class SearchBarComponent implements OnInit, AfterViewInit {
   @ViewChildren('input') vc;
   query$: Observable<any>;
   displayStatus: any;
+  querydata$:any;
   searchdata = {
     query: '',
     verify: false,
@@ -36,19 +37,36 @@ export class SearchBarComponent implements OnInit, AfterViewInit {
       this.searchdata.query = query;
 
     });
+    this.querydata$ = store.select(fromRoot.getwholequery);
+    this.querydata$.subscribe(res => {
+      this.searchdata = res;
+    })
 
   };
+
   hidebox(event: any) {
     if (event.which === 13) {
       this.displayStatus = 'hidebox';
+      this.submit();
+    }
+  }
+
+  hidesuggestions(data: number) {
+    if (data === 1) {
+      this.displayStatus = 'hidebox';
+    } else {
+      this.displayStatus = 'showbox';
     }
   }
   onquery(event: any) {
+    this.store.dispatch(new query.QueryAction(event.target.value));
     if (event.target.value.length > 2) {
-      this.store.dispatch(new query.QueryAction(event.target.value));
       this.displayStatus = 'showbox';
       this.submit();
+      this.store.dispatch(new queryactions.QueryServerAction({'query':this.searchdata}));
       this.hidebox(event);
+    } else if(event.target.value.length == 2) {
+      this.submit();
     }
   }
   ShowAuto() {
@@ -61,6 +79,7 @@ export class SearchBarComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.vc.first.nativeElement.focus();
   }
+
   submit() {
     if (this.searchdata.query.toString().length !== 0) {
       this.router.navigate(['/search'], {queryParams: this.searchdata});
