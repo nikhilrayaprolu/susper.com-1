@@ -28,9 +28,8 @@ export class ResultsComponent implements OnInit {
     query: '',
     start: 0,
     rows: 10,
-
+    mode: 'speech'
   };
-
   querylook = {};
   hidefooter = 1;
   hideAutoCorrect = 1;
@@ -40,6 +39,7 @@ export class ResultsComponent implements OnInit {
   resultscomponentchange$: Observable<any>;
   totalResults: number;
   hideIntelligence: boolean;
+  speech$: Observable<any>;
 
   getNumber(N) {
     let result = Array.apply(null, { length: N }).map(Number.call, Number);
@@ -195,6 +195,13 @@ export class ResultsComponent implements OnInit {
       this.begin = this.start + 1;
 
     });
+
+    this.speech$ = store.select(fromRoot.getquery);
+    this.speech$.subscribe(say => {
+      if (this.searchdata.mode === 'speech') {
+        // call TTS feature when speech mode is present
+      }
+    })
 
   }
 
