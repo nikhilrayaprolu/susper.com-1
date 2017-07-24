@@ -196,10 +196,10 @@ export class ResultsComponent implements OnInit {
 
     });
 
-    this.speech$ = store.select(fromRoot.getquery);
+    this.speech$ = store.select(fromRoot.getSpeechMode);
     this.speech$.subscribe(say => {
-      if (this.searchdata.mode === 'speech') {
-        // call TTS feature when speech mode is present
+      if (this.searchdata.mode == 'speech') {
+
       }
     })
 
