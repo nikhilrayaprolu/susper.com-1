@@ -20,7 +20,7 @@ export class InfoboxComponent implements OnInit {
   initialresults: Array<any>;
   resultscomponentchange$: Observable<any>;
   response$: Observable<any>;
-
+  speechmode: any;
   constructor(
     private knowledgeservice: KnowledgeapiService,
     private route: Router,
@@ -29,9 +29,10 @@ export class InfoboxComponent implements OnInit {
     private ref: ChangeDetectorRef,
     private synthesis: SpeechSynthesisService
     ) {
-    this.query$ = store.select(fromRoot.getquery);
+    this.query$ = store.select(fromRoot.getwholequery);
     this.query$.subscribe(query => {
-      this.keyword = query;
+      this.keyword = query.query;
+      this.speechmode = query.mode;
     });
     this.response$ = store.select(fromRoot.getKnowledge);
     this.response$.subscribe(res => {
@@ -39,7 +40,10 @@ export class InfoboxComponent implements OnInit {
         if (res.results[0]) {
           if (res.results[0].label.toLowerCase().includes(this.keyword.toLowerCase())) {
             this.results = res.results;
-            this.startSpeaking(this.results[0].description);
+            if(this.speechmode === 'speech') {
+              this.startSpeaking(this.results[0].description);
+            }
+
           } else {
               this.results = [];
             }
